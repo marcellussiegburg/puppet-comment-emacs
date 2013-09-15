@@ -20,7 +20,7 @@
 
 ;;; Commentary:
 
-;; It activates skeleton mode, hopefully you have it installed.
+;; It requires skeletons installed, hopefully you have it.
 
 ;;; Code:
 
@@ -46,14 +46,95 @@ width. It begins lines with start char"
 	      (concat start-chars (car splitted) "\n" (truncate-string-to-fit (mapconcat 'identity (cdr splitted) " ") len start-chars)))
 	  (concat start-chars (mapconcat 'identity (take num splitted) " ") "\n" (truncate-string-to-fit (mapconcat 'identity (nthcdr num splitted) " ") len start-chars)))))))
 
+(define-skeleton puppet-class-comment
+  "Promts you for values and automatically inserts the comments for your class comment."
+  nil
+  (concat "# == Class: " (file-name-base buffer-file-truename) "\n")
+  (truncate-string-to-fit (skeleton-read (concat "Description of class " (file-name-base buffer-file-truename) ": ")) 80 "# ")
+  "#\n"
+  "# === Parameters\n"
+  "#\n"
+  ("Parameter name: "
+   "# [*" str "*]\n"
+   "#\n"
+   (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
+   "#\n");(puppet-parameters-comment)
+  "# === Variables\n"
+  "#\n"
+  (`"Variable name: "
+   "# [*" ,str "*]\n"
+   "#\n"
+   (truncate-string-to-fit (skeleton-read (concat "Description of " ,str ": ")) 80 "#   ")
+   "#\n");(puppet-variable-comment)
+  "# === Examples\n"
+  "#\n"
+  (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (file-name-base buffer-file-truename) ": ")) 80 "# ")
+  "#\n"
+  "# === Authors\n"
+  "#\n"
+  ("Author name: "
+   "# " str
+   (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n");(puppet-author-comment)
+  "#\n"
+  "# === Copyright\n"
+  "#\n"
+  "# "
+  (skeleton-read "\"Copyright year name\" or license name: ") "\n"
+  "#\n")
+
+(define-skeleton puppet-define-comment
+  "Promts you for values and automatically inserts the comments for you define comment."
+  nil
+  (concat "# == Define: " (file-name-base buffer-file-truename) "\n")
+  (truncate-string-to-fit (skeleton-read (concat "Description of define " (file-name-base buffer-file-truename) ": ")) 80 "# ")
+  "#\n"
+  "# === Parameters\n"
+  "#\n"
+  ("Parameter name: "
+   "# [*" str "*]\n"
+   "#\n"
+   (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
+   "#\n");(puppet-parameters-comment)
+  "# === Examples\n"
+  "#\n"
+  (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (file-name-base buffer-file-truename) ": ")) 80 "# ")
+  "#\n"
+  "# === Authors\n"
+  "#\n"
+  ("Author name: "
+   "# " str
+   (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n");(puppet-author-comment)
+  "#\n"
+  "# === Copyright\n"
+  "#\n"
+  "# "
+  (skeleton-read "\"Copyright year name\" or license name: ") "\n"
+  "#\n")
+
+(define-skeleton puppet-parameters-comment
+  "Promts you continuously for variables and their descriptions and inserts them."
+  nil
+  ("Parameter name: "
+   "# [*" str "*]\n"
+   "#\n"
+   (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
+   "#\n"))
+
 (define-skeleton puppet-variable-comment
-  "Promts you continuing for variables and their descriptions and inserts them."
+  "Promts you continuously for variables and their descriptions and inserts them."
   nil
   ("Variable name: "
    "# [*" str "*]\n"
    "#\n"
    (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
    "#\n"))
+
+(define-skeleton puppet-author-comment
+  "Promts you continuously for author names and their email addresses and inserts them."
+  nil
+  ("Author name: "
+   "# " str
+   (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n"))
 
 (provide 'puppet-comment)
 ;;; puppet-comment.el ends here
