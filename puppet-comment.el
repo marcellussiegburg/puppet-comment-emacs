@@ -24,6 +24,14 @@
 
 ;;; Code:
 
+;; Key bindings
+(local-set-key (kbd "C-c c C-c") 'puppet-class-comment)
+(local-set-key (kbd "C-c c C-d") 'puppet-define-comment)
+(local-set-key (kbd "C-c c C-p") 'puppet-parameter-comment)
+(local-set-key (kbd "C-c c C-v") 'puppet-variable-comment)
+(local-set-key (kbd "C-c c C-a") 'puppet-author-comment)
+
+;; Functions
 (defun take (n xs)
   "Takes n values of list xs"
   (if (< n 1) ()
@@ -46,6 +54,7 @@ width. It begins lines with start char"
 	      (concat start-chars (car splitted) "\n" (truncate-string-to-fit (mapconcat 'identity (cdr splitted) " ") len start-chars)))
 	  (concat start-chars (mapconcat 'identity (take num splitted) " ") "\n" (truncate-string-to-fit (mapconcat 'identity (nthcdr num splitted) " ") len start-chars)))))))
 
+;; Skeletons
 (define-skeleton puppet-class-comment
   "Promts you for values and automatically inserts the comments for your class comment."
   nil
@@ -58,13 +67,13 @@ width. It begins lines with start char"
    "# [*" str "*]\n"
    "#\n"
    (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
-   "#\n");(puppet-parameters-comment)
+   "#\n");(puppet-parameter-comment)
   "# === Variables\n"
   "#\n"
-  (`"Variable name: "
-   "# [*" ,str "*]\n"
+  ("Variable name: "
+   "# [*" str "*]\n"
    "#\n"
-   (truncate-string-to-fit (skeleton-read (concat "Description of " ,str ": ")) 80 "#   ")
+   (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
    "#\n");(puppet-variable-comment)
   "# === Examples\n"
   "#\n"
@@ -80,7 +89,7 @@ width. It begins lines with start char"
   "#\n"
   "# "
   (skeleton-read "\"Copyright year name\" or license name: ") "\n"
-  "#\n")
+  "#")
 
 (define-skeleton puppet-define-comment
   "Promts you for values and automatically inserts the comments for you define comment."
@@ -94,7 +103,7 @@ width. It begins lines with start char"
    "# [*" str "*]\n"
    "#\n"
    (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
-   "#\n");(puppet-parameters-comment)
+   "#\n");(puppet-parameter-comment)
   "# === Examples\n"
   "#\n"
   (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (file-name-base buffer-file-truename) ": ")) 80 "# ")
@@ -109,16 +118,17 @@ width. It begins lines with start char"
   "#\n"
   "# "
   (skeleton-read "\"Copyright year name\" or license name: ") "\n"
-  "#\n")
+  "#")
 
-(define-skeleton puppet-parameters-comment
+(define-skeleton puppet-parameter-comment
   "Promts you continuously for variables and their descriptions and inserts them."
   nil
   ("Parameter name: "
    "# [*" str "*]\n"
    "#\n"
    (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
-   "#\n"))
+   "#\n")
+  (delete-char -1 nil))
 
 (define-skeleton puppet-variable-comment
   "Promts you continuously for variables and their descriptions and inserts them."
@@ -127,14 +137,16 @@ width. It begins lines with start char"
    "# [*" str "*]\n"
    "#\n"
    (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
-   "#\n"))
+   "#\n")
+  (delete-char -1 nil))
 
 (define-skeleton puppet-author-comment
   "Promts you continuously for author names and their email addresses and inserts them."
   nil
   ("Author name: "
    "# " str
-   (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n"))
+   (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n")
+  (delete-char -1 nil))
 
 (provide 'puppet-comment)
 ;;; puppet-comment.el ends here

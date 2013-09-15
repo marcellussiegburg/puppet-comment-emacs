@@ -11,6 +11,16 @@ The aim of this piece of software is to support all comment types mentioned in
 the puppet coding style guide
 (http://docs.puppetlabs.com/guides/style_guide.html#puppet-doc).
 
+Provided Keyboard Bindings
+--------------------------
+| Key Binding | Called Function                |
+| ----------- | ------------------------------ |
+| C-c c C-c   | ***puppet-class-comment***     |  
+| C-c c C-d   | ***puppet-define-comment***    |
+| C-c c C-p   | ***puppet-parameter-comment*** |
+| C-c c C-v   | ***puppet-variable-comment***  |
+| C-c c C-a   | ***puppet-author-comment***    |
+
 Provided Functions
 ------------------
 ***puppet-class-comment***
@@ -35,7 +45,7 @@ Provided Functions
 * Finally it is starting again until you submit an empty string (nil) for the
   name of the variable
 
-***puppet-author-comment****
+***puppet-author-comment***
 * Promts you for the name of the author
 * Next it promts for the email of that author
 * Finally it is starting again until you submit an empty string (nil) for the
