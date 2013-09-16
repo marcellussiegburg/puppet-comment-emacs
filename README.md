@@ -1,15 +1,31 @@
 puppet-comment for Emacs
 ========================
-This module provides skeletons for writing comments in puppet, if you are using
-emacs.
+This emacs module provides a minor-mode which will be loaded automatically, if a
+puppet file (with the extension .pp) is opened.
 
-You need skeletons installed, for example inside your site-lisp directory.
+It provides skeletons for writing comments in puppet. In the minor mode these
+skeleton functions can be called via default keybindings.
+
+You need skeletons installed, for example inside your site-lisp directory. It
+should be installed, if you have the latest emacs version installed.
 
 Aim of this project
 -------------------
 The aim of this piece of software is to support all comment types mentioned in
 the puppet coding style guide
 (http://docs.puppetlabs.com/guides/style_guide.html#puppet-doc).
+
+At the moment it fullfills requirements of the puppet style guide version 1.1.2.
+
+How to install
+--------------
+
+Put *puppet-comment.el* in your load-path (e.g. site-lisp directory) or put the following lines in you .emacs file:
+
+```
+(add-to-list 'load-path "***path to puppet-comment***/")
+(load-library "puppet-comment")
+```
 
 Provided Keyboard Bindings
 --------------------------

@@ -20,16 +20,24 @@
 
 ;;; Commentary:
 
-;; It requires skeletons installed, hopefully you have it.
+;; This file provides a minor-mode for puppet comments. By default it will be
+;; loaded with .pp$ files and provides key bindings for the provided functions.
+;; It requires skeletons installed, hopefully you have it. If you have the
+;; latest emacs version installed.
 
 ;;; Code:
 
-;; Key bindings
-(local-set-key (kbd "C-c c C-c") 'puppet-class-comment)
-(local-set-key (kbd "C-c c C-d") 'puppet-define-comment)
-(local-set-key (kbd "C-c c C-p") 'puppet-parameter-comment)
-(local-set-key (kbd "C-c c C-v") 'puppet-variable-comment)
-(local-set-key (kbd "C-c c C-a") 'puppet-author-comment)
+;; Variables
+; Key Map (Key bindings)
+(defvar puppet-comment-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c c C-c") 'puppet-class-comment)
+    (define-key map (kbd "C-c c C-d") 'puppet-define-comment)
+    (define-key map (kbd "C-c c C-p") 'puppet-parameter-comment)
+    (define-key map (kbd "C-c c C-v") 'puppet-variable-comment)
+    (define-key map (kbd "C-c c C-a") 'puppet-author-comment)
+    map)
+  "Keymap used in puppet-comment-mode.")
 
 ;; Functions
 (defun take (n xs)
@@ -148,5 +156,16 @@ width. It begins lines with start char"
    (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n")
   (delete-char -1 nil))
 
-(provide 'puppet-comment)
+(provide 'puppet-comment-mode)
+
+;; Mode definition
+(define-minor-mode puppet-comment-mode
+  "Toggle puppet-comment-mode
+This minor-mode provides skeletons for writing comments in puppet"
+  :init-value nil
+  :lighter "puppet-comment"
+  :keymap puppet-comment-mode-map)
+
+(add-to-list 'auto-mode-alist '("\\.pp\\'" . puppet-comment-mode))
+
 ;;; puppet-comment.el ends here
