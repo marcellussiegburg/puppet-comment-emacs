@@ -21,9 +21,10 @@
 ;;; Commentary:
 
 ;; This file provides a minor-mode for puppet comments. By default it will be
-;; loaded with .pp$ files and provides key bindings for the provided functions.
+;; started together with puppet-mode and provides key bindings for the provided
+;; functions.
 ;; It requires skeletons installed, hopefully you have it. If you have the
-;; latest emacs version installed.
+;; latest emacs version installed you should not be worried.
 
 ;;; Code:
 
@@ -156,8 +157,6 @@ width. It begins lines with start char"
    (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n")
   (delete-char -1 nil))
 
-(provide 'puppet-comment-mode)
-
 ;; Mode definition
 (define-minor-mode puppet-comment-mode
   "Toggle puppet-comment-mode
@@ -166,6 +165,8 @@ This minor-mode provides skeletons for writing comments in puppet"
   :lighter "puppet-comment"
   :keymap puppet-comment-mode-map)
 
-(add-to-list 'auto-mode-alist '("\\.pp\\'" . puppet-comment-mode))
+; Start puppet-comment-mode together with puppet-mode
+(add-hook 'puppet-mode-hook 'puppet-comment-mode)
 
+(provide 'puppet-comment)
 ;;; puppet-comment.el ends here

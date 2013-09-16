@@ -1,7 +1,6 @@
 puppet-comment for Emacs
 ========================
-This emacs module provides a minor-mode which will be loaded automatically, if a
-puppet file (with the extension .pp) is opened.
+This emacs module provides a minor-mode which will be loaded automatically together with puppet mode.
 
 It provides skeletons for writing comments in puppet. In the minor mode these
 skeleton functions can be called via default keybindings.
@@ -20,11 +19,17 @@ At the moment it fullfills requirements of the puppet style guide version 1.1.2.
 How to install
 --------------
 
-Put *puppet-comment.el* in your load-path (e.g. site-lisp directory) or put the following lines in you .emacs file:
+Put *puppet-comment.el* in your load-path (e.g. site-lisp directory) and require puppet-comment or put the following lines in you .emacs file:
 
-```
+```lisp
 (add-to-list 'load-path "***path to puppet-comment***/")
-(load-library "puppet-comment")
+(require 'puppet-comment)
+```
+
+If puppet-mode is not in your load-path you should additionally enable loading
+of puppet-comment-mode by putting this in your .emacs file:
+```lisp
+(add-to-list 'auto-mode-alist '("\\.pp\\'" . puppet-comment-mode))
 ```
 
 Provided Keyboard Bindings
