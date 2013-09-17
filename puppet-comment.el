@@ -63,11 +63,42 @@ width. It begins lines with start char"
 	      (concat start-chars (car splitted) "\n" (truncate-string-to-fit (mapconcat 'identity (cdr splitted) " ") len start-chars)))
 	  (concat start-chars (mapconcat 'identity (take num splitted) " ") "\n" (truncate-string-to-fit (mapconcat 'identity (nthcdr num splitted) " ") len start-chars)))))))
 
+(defun drop-until-equal-string (string list)
+  "Drops elements from the list of strings until string matches the
+first element"
+  (setq continue t)
+  (while (and (> (length list) 0) continue)
+    (if (string= string (car list)) (setq continue nil)
+      (setq list (cdr list)))) (cdr list))
+
+(defun get-dirs (subpath)
+  "Reconstructs the path with double points"
+  (setq dirs "")
+  (while (>= (length subpath) 2)
+    (setq dirs (concat "::" (car subpath) dirs))
+    (setq subpath (cdr subpath)))
+  dirs)
+
+(defun build-name (path)
+  "Extracts the class name and module names from the given path"
+  (let* ((file (file-name-sans-extension (file-name-nondirectory path)))
+	 (base (if (string= "init" file) "" (concat "::" file)))
+	 (subpath (drop-until-equal-string "modules" (split-string path "/" t)))
+	 (module (if (> (length subpath) 0) (car subpath) ""))
+	 (dirs (if (> (length subpath) 1) (get-dirs (cdr (cdr subpath))) "")))
+    (concat module dirs base)))
+
+(define-skeleton foo
+  "bla"
+  nil
+  (concat "# == Class: " (build-name buffer-file-truename) "\n"))
+
+
 ;; Skeletons
 (define-skeleton puppet-class-comment
   "Promts you for values and automatically inserts the comments for your class comment."
   nil
-  (concat "# == Class: " (file-name-base buffer-file-truename) "\n")
+  (concat "# == Class: " (build-name buffer-file-truename) "\n")
   (truncate-string-to-fit (skeleton-read (concat "Description of class " (file-name-base buffer-file-truename) ": ")) 80 "# ")
   "#\n"
   "# === Parameters\n"
