@@ -88,18 +88,12 @@ first element"
 	 (dirs (if (> (length subpath) 1) (get-dirs (cdr (cdr subpath))) "")))
     (concat module dirs base)))
 
-(define-skeleton foo
-  "bla"
-  nil
-  (concat "# == Class: " (build-name buffer-file-truename) "\n"))
-
-
 ;; Skeletons
 (define-skeleton puppet-class-comment
   "Promts you for values and automatically inserts the comments for your class comment."
   nil
   (concat "# == Class: " (build-name buffer-file-truename) "\n")
-  (truncate-string-to-fit (skeleton-read (concat "Description of class " (file-name-base buffer-file-truename) ": ")) 80 "# ")
+  (truncate-string-to-fit (skeleton-read (concat "Description of class " (build-name buffer-file-truename) ": ")) 80 "# ")
   "#\n"
   "# === Parameters\n"
   "#\n"
@@ -117,7 +111,7 @@ first element"
    "#\n");(puppet-variable-comment)
   "# === Examples\n"
   "#\n"
-  (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (file-name-base buffer-file-truename) ": ")) 80 "# ")
+  (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (build-name buffer-file-truename) ": ")) 80 "# ")
   "#\n"
   "# === Authors\n"
   "#\n"
@@ -134,8 +128,8 @@ first element"
 (define-skeleton puppet-define-comment
   "Promts you for values and automatically inserts the comments for you define comment."
   nil
-  (concat "# == Define: " (file-name-base buffer-file-truename) "\n")
-  (truncate-string-to-fit (skeleton-read (concat "Description of define " (file-name-base buffer-file-truename) ": ")) 80 "# ")
+  (concat "# == Define: " (build-name buffer-file-truename) "\n")
+  (truncate-string-to-fit (skeleton-read (concat "Description of define " (build-name buffer-file-truename) ": ")) 80 "# ")
   "#\n"
   "# === Parameters\n"
   "#\n"
@@ -146,7 +140,7 @@ first element"
    "#\n");(puppet-parameter-comment)
   "# === Examples\n"
   "#\n"
-  (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (file-name-base buffer-file-truename) ": ")) 80 "# ")
+  (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (build-name buffer-file-truename) ": ")) 80 "# ")
   "#\n"
   "# === Authors\n"
   "#\n"
