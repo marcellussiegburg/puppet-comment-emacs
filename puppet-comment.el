@@ -93,6 +93,7 @@ first element"
   "Promts you for values and automatically inserts the comments for your class comment."
   nil
   (concat "# == Class: " (build-name buffer-file-truename) "\n")
+  "#\n"
   (truncate-string-to-fit (skeleton-read (concat "Description of class " (build-name buffer-file-truename) ": ")) 80 "# ")
   "#\n"
   "# === Parameters\n"
@@ -129,6 +130,7 @@ first element"
   "Promts you for values and automatically inserts the comments for you define comment."
   nil
   (concat "# == Define: " (build-name buffer-file-truename) "\n")
+  "#\n"
   (truncate-string-to-fit (skeleton-read (concat "Description of define " (build-name buffer-file-truename) ": ")) 80 "# ")
   "#\n"
   "# === Parameters\n"
