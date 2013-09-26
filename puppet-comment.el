@@ -98,33 +98,23 @@ first element"
   "#\n"
   "# === Parameters\n"
   "#\n"
-  ("Parameter name: "
-   "# [*" str "*]\n"
-   "#\n"
-   (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
-   "#\n");(puppet-parameter-comment)
+  (progn (puppet-parameter-comment) nil)
   "# === Variables\n"
   "#\n"
-  ("Variable name: "
-   "# [*" str "*]\n"
-   "#\n"
-   (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
-   "#\n");(puppet-variable-comment)
+  (progn (puppet-variable-comment) nil)
   "# === Examples\n"
   "#\n"
   (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (build-name buffer-file-truename) ": ")) 80 "# ")
   "#\n"
   "# === Authors\n"
   "#\n"
-  ("Author name: "
-   "# " str
-   (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n");(puppet-author-comment)
+  (progn (puppet-author-comment) nil)
   "#\n"
   "# === Copyright\n"
   "#\n"
   "# "
   (skeleton-read "\"Copyright year name\" or license name: ") "\n"
-  "#")
+  "#\n")
 
 (define-skeleton puppet-define-comment
   "Promts you for values and automatically inserts the comments for you define comment."
@@ -135,26 +125,20 @@ first element"
   "#\n"
   "# === Parameters\n"
   "#\n"
-  ("Parameter name: "
-   "# [*" str "*]\n"
-   "#\n"
-   (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
-   "#\n");(puppet-parameter-comment)
+  (progn (puppet-parameter-comment) nil)
   "# === Examples\n"
   "#\n"
-  (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (build-name buffer-file-truename) ": ")) 80 "# ")
+  (truncate-string-to-fit (skeleton-read (concat "Code for example usage of class " (build-name buffer-file-truename) ": ")) 80 "#   ")
   "#\n"
   "# === Authors\n"
   "#\n"
-  ("Author name: "
-   "# " str
-   (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n");(puppet-author-comment)
+  (progn (puppet-author-comment) nil)
   "#\n"
   "# === Copyright\n"
   "#\n"
   "# "
   (skeleton-read "\"Copyright year name\" or license name: ") "\n"
-  "#")
+  "#\n")
 
 (define-skeleton puppet-parameter-comment
   "Promts you continuously for variables and their descriptions and inserts them."
@@ -163,26 +147,31 @@ first element"
    "# [*" str "*]\n"
    "#\n"
    (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
-   "#\n")
-  (delete-char -1 nil))
+   ("What it requires (parameters, modules, etc.): "
+    "#   *Requires*: " str "\n")
+   '(setq selector "")
+   '(while (and (not (string= selector "y")) (not (string= selector "n")))
+      (setq selector (skeleton-read "Required? (y/n): ")))
+   '(if (string= selector "y") (setq v1 "**Required**")
+      (setq v1 (concat "*Optional* (defaults to " (skeleton-read "Default value: ") ")")))
+   "#   " v1 "\n"
+   "#\n"))
 
 (define-skeleton puppet-variable-comment
-  "Promts you continuously for variables and their descriptions and inserts them."
+  "Promts you continuously for variables, their descriptions and if they are Required, if it is not it asks for the default value and inserts all values."
   nil
   ("Variable name: "
    "# [*" str "*]\n"
    "#\n"
    (truncate-string-to-fit (skeleton-read (concat "Description of " str ": ")) 80 "#   ")
-   "#\n")
-  (delete-char -1 nil))
+   "#\n"))
 
 (define-skeleton puppet-author-comment
   "Promts you continuously for author names and their email addresses and inserts them."
   nil
   ("Author name: "
    "# " str
-   (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n")
-  (delete-char -1 nil))
+   (let ((email (skeleton-read "Author Email: "))) (if (string= "" email) "" (concat " <" email ">")))"\n"))
 
 ;; Mode definition
 (define-minor-mode puppet-comment-mode
@@ -192,6 +181,8 @@ This minor-mode provides skeletons for writing comments in puppet"
   :lighter "puppet-comment"
   :keymap puppet-comment-mode-map)
 
+; Do not write a new line after skeleton
+(setq skeleton-end-hook nil)
 ; Start puppet-comment-mode together with puppet-mode
 (add-hook 'puppet-mode-hook 'puppet-comment-mode)
 

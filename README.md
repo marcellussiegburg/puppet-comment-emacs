@@ -19,7 +19,7 @@ At the moment it fullfills requirements of the puppet style guide version 1.1.2.
 How to install
 --------------
 
-Put *puppet-comment.el* in your load-path (e.g. site-lisp directory) and require puppet-comment or put the following lines in you .emacs file:
+Put *puppet-comment.el* in your load-path (e.g. site-lisp directory) and require puppet-comment or put the following lines in your .emacs file:
 
 ```lisp
 (add-to-list 'load-path "***path to puppet-comment***/")
@@ -28,6 +28,7 @@ Put *puppet-comment.el* in your load-path (e.g. site-lisp directory) and require
 
 If puppet-mode is not in your load-path you should additionally enable loading
 of puppet-comment-mode by putting this in your .emacs file:
+
 ```lisp
 (add-to-list 'auto-mode-alist '("\\.pp\\'" . puppet-comment-mode))
 ```
@@ -57,6 +58,8 @@ Provided Functions
 ***puppet-parameter-comment***
 * Promts you for the name of the parameter
 * Next it promts for the description of that parameter
+* Then it promts if the parameter is required
+* If it is optional, it also promts for the default value of the parameter
 * Finally it is starting again until you submit an empty string (nil) for the
   name of the parameter
 
